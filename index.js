@@ -14,6 +14,7 @@ const mailer = require("./core/mailer");
 const { registerForm } = require("./core/registerPage");
 const layout = require("./core/layout");
 const billing = require("./core/billing");
+const lifecycle = require("./core/lifecycle");
 const { loadPlugins } = require("./core/pluginLoader");
 
 const app = express();
@@ -478,6 +479,17 @@ setInterval(() => {
     if (made) console.log(`[billing] facturas recurrentes generadas: ${made}`);
   } catch (e) {
     console.error("[billing] error:", e.message);
+  }
+}, 30000);
+
+setInterval(() => {
+  try {
+    const out = lifecycle.runLifecycle(db);
+    if (out && !out.skipped && (out.suspended || out.canceled || out.deleted)) {
+      console.log(`[lifecycle] suspendidos:${out.suspended} cancelados:${out.canceled} eliminados:${out.deleted}`);
+    }
+  } catch (e) {
+    console.error("[lifecycle] error:", e.message);
   }
 }, 30000);
 

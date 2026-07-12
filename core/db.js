@@ -55,6 +55,9 @@ addColumnIfMissing("products", "image_path", "TEXT DEFAULT ''");
 addColumnIfMissing("products", "stock_limit", "INTEGER NOT NULL DEFAULT 0");
 addColumnIfMissing("invoices", "currency", "TEXT NOT NULL DEFAULT 'USD'");
 addColumnIfMissing("invoices", "payment_method", "TEXT NOT NULL DEFAULT ''");
+addColumnIfMissing("invoices", "suspended_at", "TEXT");
+addColumnIfMissing("invoices", "canceled_at", "TEXT");
+addColumnIfMissing("services", "suspended_at", "TEXT");
 addColumnIfMissing("payments", "currency", "TEXT NOT NULL DEFAULT 'USD'");
 addColumnIfMissing("products", "accept_credit", "INTEGER NOT NULL DEFAULT 1");
 addColumnIfMissing("products", "accept_paypal", "INTEGER NOT NULL DEFAULT 1");
@@ -120,6 +123,10 @@ function seed() { ensureAdmin();
   ensureSetting("stripe_pk", "");
   ensureSetting("stripe_sk", "");
   ensureSetting("stripe_webhook_secret", "");
+  ensureSetting("lifecycle_enabled", "0");
+  ensureSetting("lifecycle_pending_to_suspend", "off");
+  ensureSetting("lifecycle_suspend_to_cancel", "off");
+  ensureSetting("lifecycle_cancel_to_delete", "off");
   ensureSetting("site_name", "SKY ULTRA PLUS shop"); ensureSetting("site_logo", ""); ensureSetting("require_email_verification", "0"); ensureSetting("smtp_host", ""); ensureSetting("smtp_port", "587"); ensureSetting("smtp_security", "STARTTLS"); ensureSetting("smtp_user", ""); ensureSetting("smtp_pass", ""); ensureSetting("smtp_from_name", ""); ensureSetting("smtp_from_email", ""); ensureSetting("site_url", ""); ensureSetting("mail_header_color_from", "#4c1d95"); ensureSetting("mail_header_color_to", "#7c3aed"); ensureSetting("theme_dark_bg", "#050508"); ensureSetting("theme_dark_card", "#101426"); ensureSetting("theme_dark_text", "#e9f2ff"); ensureSetting("theme_dark_accent", "#8b2cff"); ensureSetting("theme_light_bg", "#f4f7fb"); ensureSetting("theme_light_card", "#ffffff"); ensureSetting("theme_light_text", "#102033"); ensureSetting("theme_light_accent", "#2563eb"); ensureCategory("client", "Inicio", "ri-dashboard-line", 10); ensureCategory("client", "Tienda", "ri-store-2-line", 20); ensureCategory("client", "Cuenta", "ri-user-settings-line", 30); ensureCategory("client", "Facturación", "ri-bill-line", 40); ensureCategory("admin", "Resumen", "ri-dashboard-2-line", 10); ensureCategory("admin", "Tienda", "ri-shopping-bag-3-line", 20); ensureCategory("admin", "Usuarios", "ri-group-line", 30); ensureCategory("admin", "Facturación", "ri-file-list-3-line", 40); ensureCategory("admin", "Sistema", "ri-settings-4-line", 50); ensureSetting("support_email", ""); ensureSetting("support_whatsapp_country", "+1"); ensureSetting("support_whatsapp_number", ""); ensureSetting("support_whatsapp_group", ""); ensureSetting("promo_slides", JSON.stringify([{"text":"¡Bienvenido a nuestra tienda!","subtitle":"Explora nuestros productos y servicios digitales","colorFrom":"#4c1d95","colorTo":"#7c3aed","image":""},{"text":"Pagos 100% seguros","subtitle":"Múltiples métodos de pago rápidos y confiables","colorFrom":"#1e3a5f","colorTo":"#2563eb","image":""},{"text":"Entrega inmediata","subtitle":"Recibe tus productos digitales al instante","colorFrom":"#1a3a2a","colorTo":"#059669","image":""},{"text":"Soporte disponible","subtitle":"Estamos aquí para ayudarte en lo que necesites","colorFrom":"#3d1f1f","colorTo":"#dc2626","image":""},{"text":"Precios imbatibles","subtitle":"La mejor relación calidad-precio del mercado","colorFrom":"#1f2d3d","colorTo":"#0ea5e9","image":""},{"text":"Catálogo completo","subtitle":"Encuentra exactamente lo que estás buscando","colorFrom":"#3d2a00","colorTo":"#f59e0b","image":""},{"text":"Comunidad activa","subtitle":"Únete a miles de clientes satisfechos","colorFrom":"#2d1f3d","colorTo":"#a855f7","image":""}])); }
 seed();
 

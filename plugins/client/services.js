@@ -38,9 +38,15 @@ function router(ctx){
       const allocation=s.status==='active'?ctx.db.sqlite.prepare("SELECT delivered_content FROM delivery_allocations WHERE invoice_id=? AND user_id=? LIMIT 1").get(s.invoice_id,req.session.user.id):null;
       const thumb=s.image_path?`<img src="${h(ctx,s.image_path)}" alt="">`:`<div class="svc-thumb-fallback"><i class="ri-archive-2-line"></i></div>`;
       const renewal=s.next_invoice_at?`<span class="svc-renew"><i class="ri-refresh-line"></i> Próx. renovación: ${fmtDate(s.next_invoice_at)}</span>`:'';
-      const info=allocation?`<div class="svc-info"><div class="svc-info-head"><i class="ri-key-2-line"></i> Información del producto</div><textarea readonly>${h(ctx,allocation.delivered_content)}</textarea></div>`:(s.status!=='active'?'<div class="svc-canceled-note"><i class="ri-eye-off-line"></i> Servicio cancelado. La información privada está oculta.</div>':'');
+      let hiddenMsg='';
+      if(!allocation){
+        if(s.status==='suspended')hiddenMsg='<div class="svc-canceled-note"><i class="ri-eye-off-line"></i> Servicio suspendido. La información privada está oculta.</div>';
+        else if(s.status==='canceled')hiddenMsg='<div class="svc-canceled-note"><i class="ri-eye-off-line"></i> Servicio cancelado. La información privada está oculta.</div>';
+        else if(s.status!=='active')hiddenMsg='<div class="svc-canceled-note"><i class="ri-eye-off-line"></i> Información no disponible en este estado.</div>';
+      }
+      const info=allocation?`<div class="svc-info"><div class="svc-info-head"><i class="ri-key-2-line"></i> Información del producto</div><textarea readonly>${h(ctx,allocation.delivered_content)}</textarea></div>`:hiddenMsg;
 
-      return `<article class="svc-card${s.status==='canceled'?' is-canceled':''}">
+      return `<article class="svc-card${(s.status==='canceled'||s.status==='suspended')?' is-canceled':''}">
         <header class="svc-card-head">
           <span class="svc-id">Servicio #${s.id}</span>
           <span class="svc-status ${st[0]}"><i class="${st[2]}"></i> ${h(ctx,st[1])}</span>
